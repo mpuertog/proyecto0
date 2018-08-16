@@ -22,3 +22,18 @@ class UserAdmin(UserAdmin):
     list_display = ('username', 'email', 'first_name', 'last_name', 'is_staff')
     list_filter = ('is_staff',)
     search_fields = ('username',)
+
+
+class FormLogin(forms.ModelForm):
+    email_login = forms.CharField(
+        widget=forms.EmailInput(attrs={'class': 'form-control'}),
+        label='Usuario'
+    )
+    password_login = forms.CharField(
+        widget=forms.PasswordInput(attrs={'class': 'form-control'}),
+        label='Contraseña'
+    )
+
+    class Meta:
+        model = User
+        fields = ['username', 'password']

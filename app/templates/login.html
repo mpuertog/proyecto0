@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+{% block content %}
+
+    <!-- Start content -->
+    <div class="content">
+
+        <div class="">
+            <div class="page-header-title">
+                <h4 class="page-title">Inicio de Sesión</h4>
+            </div>
+        </div>
+
+        <div class="page-content-wrapper ">
+            <div class="container">
+
+                {% if messages %}
+                    <ul class="messages">
+                        {% for message in messages %}
+                            {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
+                                <div class="alert alert-danger">
+                                    {{ message }}
+                                </div>
+                            {% endif %}
+                            {% if message.level == DEFAULT_MESSAGE_LEVELS.INFO %}
+                                <div class="alert alert-success">
+                                    {{ message }}
+                                </div>
+                            {% endif %}
+
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="panel panel-primary">
+                            <div class="panel-body">
+                                <h4 class="m-t-0 m-b-30">Ingrese sus datos:</h4>
+                                <form class="form-horizontal" method="post">
+                                    {% csrf_token %}
+
+                                    <div class="form-group">
+                                        <label class="col-md-2 control-label">Email</label>
+                                        <div class="col-md-10">
+                                            {{ form_login.email_login|add_class:'form-control' }}
+                                        </div>
+                                    </div>
+
+
+                                    <div class="form-group">
+                                        <label class="col-md-2 control-label">Contraseña</label>
+                                        <div class="col-md-10">
+                                            {{ form_login.password_login|add_class:'form-control' }}
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group m-b-0">
+                                        <button type="submit" class="btn btn-success waves-effect waves-light m-l-10">
+                                            Iniciar Sesión
+                                        </button>
+                                        <a href="{% url 'index' %}">
+                                            <button type="button" class="btn btn-default waves-effect">Regresar
+                                            </button>
+                                        </a>
+                                    </div>
+
+                                </form>
+                            </div> <!-- panel-body -->
+                        </div> <!-- panel -->
+                    </div> <!-- col -->
+                </div> <!-- End row -->
+            </div><!-- container -->
+        </div> <!-- Page content Wrapper -->
+    </div> <!-- content -->
+
+{% endblock %}
+

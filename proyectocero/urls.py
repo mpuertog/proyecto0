@@ -24,4 +24,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     url(r'^$', views.index, name='index'),
     url(r'^registro/$', views.registro, name='registro'),
+    url(r'^login/$', views.login, name='login'),
+    url(r'^logout/$', views.logout_view, name='logout'),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

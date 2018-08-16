@@ -49,6 +49,25 @@
                         <span class="clearfix"></span>
                     </div>
 
+                    {% if user.is_authenticated %}
+                        <!-- Menu para cerrar sesion -->
+                        <ul class="nav navbar-nav navbar-right pull-right">
+                            <li class="dropdown">
+                                <a href="" class="dropdown-toggle profile waves-effect waves-light"
+                                   data-toggle="dropdown"
+                                   aria-expanded="true">
+                                <span class="profile-username">
+                                            {{ active_user }} <span class="caret"></span>
+                                        </span>
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li><a href="{% url 'logout' %}"> Logout</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                        <!-- Menu para cerrar sesion FIN-->
+                    {% endif %}
+
                 </div>
                 <!--/.nav-collapse -->
             </div>
@@ -62,7 +81,6 @@
     <div class="left side-menu">
         <div class="sidebar-inner slimscrollleft">
 
-
             <!--- Divider -->
             <div id="sidebar-menu">
                 <ul>
@@ -71,7 +89,7 @@
                                 class="mdi mdi-account-key"></i><span> Ingreso </span><span class="pull-right"><i
                                 class="mdi mdi-chevron-right"></i></span></a>
                         <ul class="list-unstyled">
-                            <li><a href="{% url 'index' %}">Iniciar Sesión</a></li>
+                            <li><a href="{% url 'login' %}">Iniciar Sesión</a></li>
                             <li><a href="{% url 'registro' %}">Registrarse</a></li>
                         </ul>
                     </li>
