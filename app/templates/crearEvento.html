@@ -1,0 +1,114 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+{% block content %}
+
+    <!-- Start content -->
+    <div class="content">
+
+        <div class="">
+            <div class="page-header-title">
+                <h4 class="page-title">Creación de Evento</h4>
+            </div>
+        </div>
+
+        <div class="page-content-wrapper ">
+            <div class="container">
+
+                {% if messages %}
+                    <ul class="messages">
+                        {% for message in messages %}
+                            {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
+                                <div class="alert alert-danger">
+                                    {{ message }}
+                                </div>
+                            {% endif %}
+                            {% if message.level == DEFAULT_MESSAGE_LEVELS.INFO %}
+                                <div class="alert alert-success">
+                                    {{ message }}
+                                </div>
+                            {% endif %}
+
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="panel panel-primary">
+                            <div class="panel-body">
+                                <h4 class="m-t-0 m-b-30">Diligencie los datos del evento:</h4>
+                                <form class="form-horizontal" method="post">
+                                    {% csrf_token %}
+
+                                    <div class="form-group">
+                                        <label class="col-md-2 control-label">Nombre:</label>
+                                        <div class="col-md-10">
+                                            {{ form_crear_evento.nombre_evento|add_class:'form-control' }}
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="col-md-2 control-label">Categoría:</label>
+                                        <div class="col-md-10">
+                                            {{ form_crear_evento.categoria_evento|add_class:'form-control' }}
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="col-md-2 control-label">Tipo:</label>
+                                        <div class="col-md-10">
+                                            {{ form_crear_evento.tipo_evento|add_class:'form-control' }}
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="col-md-2 control-label">Lugar:</label>
+                                        <div class="col-md-10">
+                                            {{ form_crear_evento.lugar_evento|add_class:'form-control' }}
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="col-md-2 control-label">Dirección:</label>
+                                        <div class="col-md-10">
+                                            {{ form_crear_evento.direccion_evento|add_class:'form-control' }}
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="col-md-2 control-label">Fecha Inicio:</label>
+                                        <div class="col-md-10">
+                                            <input type="datetime-local" class="form-control" name="fecha_inicio_evento"
+                                                   value="{{ form_crear_evento.fecha_inicio_evento.value }}">
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="col-md-2 control-label">Fecha Fin:</label>
+                                        <div class="col-md-10">
+                                            <input type="datetime-local" class="form-control" name="fecha_fin_evento"
+                                                   value="{{ form_crear_evento.fecha_fin_evento.value }}">
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group m-b-0">
+                                        <button type="submit" class="btn btn-success waves-effect waves-light m-l-10">
+                                            Crear Evento
+                                        </button>
+                                        <a href="{% url 'index' %}">
+                                            <button type="button" class="btn btn-default waves-effect">Cancelar
+                                            </button>
+                                        </a>
+                                    </div>
+
+                                </form>
+                            </div> <!-- panel-body -->
+                        </div> <!-- panel -->
+                    </div> <!-- col -->
+                </div> <!-- End row -->
+            </div><!-- container -->
+        </div> <!-- Page content Wrapper -->
+    </div> <!-- content -->
+
+{% endblock %}
+

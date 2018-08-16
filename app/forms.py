@@ -2,6 +2,7 @@ from django import forms
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
+from .models import Evento
 
 
 class FormRegistroUsuario(UserCreationForm):
@@ -37,3 +38,10 @@ class FormLogin(forms.ModelForm):
     class Meta:
         model = User
         fields = ['username', 'password']
+
+
+class FormCrearEvento(forms.ModelForm):
+    class Meta:
+        model = Evento
+        fields = ['nombre_evento', 'categoria_evento', 'lugar_evento', 'direccion_evento', 'fecha_inicio_evento',
+                  'fecha_fin_evento', 'tipo_evento']

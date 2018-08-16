@@ -6,16 +6,22 @@ from django.contrib.auth import logout
 from django.shortcuts import render
 from django.shortcuts import render_to_response
 from django.template import RequestContext
+from datetime import datetime
 
-from app.forms import FormRegistroUsuario, FormLogin
+from app.forms import FormRegistroUsuario, FormLogin, FormCrearEvento
+from app.models import Evento
 
 
 # Create your views here.
-def index(request):
+def index_view(request):
     active_user = None
     if request.user.is_authenticated:
         active_user = request.user.username
-    return render(request, 'index.html', {'active_user': active_user})
+
+    context ={
+        'active_user':active_user,
+    }
+    return render(request, 'index.html', context)
 
 
 def handler404(request):
@@ -30,7 +36,7 @@ def handler500(request):
     return response
 
 
-def registro(request):
+def registro_view(request):
     form_registro = FormRegistroUsuario()
     if request.method == 'POST':
         form_registro = FormRegistroUsuario(request.POST)
@@ -43,7 +49,7 @@ def registro(request):
     return render(request, 'registro.html', {'form_registro': form_registro})
 
 
-def login(request):
+def login_view(request):
     form_login = FormLogin()
     if request.method == 'POST':
         form_login = FormLogin(request.POST)
@@ -61,3 +67,41 @@ def login(request):
 def logout_view(request):
     logout(request)
     return HttpResponseRedirect('/')
+
+
+def crear_evento_view(request):
+    active_user = None
+    if request.user.is_authenticated:
+        active_user = request.user.username
+    else:
+        messages.add_message(request, messages.ERROR, 'Debe iniciar sesión primero')
+
+    form_crear_evento = FormCrearEvento()
+    if request.method == 'POST':
+        form_crear_evento = FormCrearEvento(request.POST)
+
+        f_inicio = datetime.strptime(form_crear_evento.data.get('fecha_inicio_evento'), '%Y-%m-%dT%H:%M')
+        f_fin = datetime.strptime(form_crear_evento.data.get('fecha_fin_evento'), '%Y-%m-%dT%H:%M')
+
+        evento_entidad = Evento()
+        evento_entidad.nombre_evento = form_crear_evento.data.get('nombre_evento')
+        evento_entidad.categoria_evento = form_crear_evento.data.get('categoria_evento')
+        evento_entidad.tipo_evento = form_crear_evento.data.get('tipo_evento')
+        evento_entidad.lugar_evento = form_crear_evento.data.get('lugar_evento')
+        evento_entidad.direccion_evento = form_crear_evento.data.get('direccion_evento')
+        evento_entidad.fecha_inicio_evento = f_inicio
+        evento_entidad.fecha_fin_evento = f_fin
+        evento_entidad.usuario_evento = request.user
+
+        try:
+            evento_entidad.save()
+            messages.add_message(request, messages.INFO, 'Evento creado exitosamente')
+        except:
+            messages.add_message(request, messages.ERROR, form_crear_evento.errors)
+
+    context = {
+        'active_user': active_user,
+        'form_crear_evento': form_crear_evento,
+    }
+
+    return render(request, 'crearEvento.html', context)
