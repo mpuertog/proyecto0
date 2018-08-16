@@ -1,3 +1,4 @@
+import traceback
 from django.http import HttpResponseRedirect
 from django.contrib import messages
 from django.contrib.auth import authenticate
@@ -18,8 +19,8 @@ def index_view(request):
     if request.user.is_authenticated:
         active_user = request.user.username
 
-    context ={
-        'active_user':active_user,
+    context = {
+        'active_user': active_user,
     }
     return render(request, 'index.html', context)
 
@@ -105,3 +106,74 @@ def crear_evento_view(request):
     }
 
     return render(request, 'crearEvento.html', context)
+
+
+def listar_eventos_view(request):
+    active_user = None
+    if request.user.is_authenticated:
+        active_user = request.user
+    else:
+        messages.add_message(request, messages.ERROR, 'Debe iniciar sesión primero')
+
+    listado_eventos = Evento.objects.filter(usuario_evento=active_user)
+
+    context = {
+        'active_user': active_user,
+        'listado_eventos': listado_eventos
+    }
+
+    return render(request, 'listarEvento.html', context)
+
+
+def borrar_eventos_view(request, event_id):
+    if not request.user.is_authenticated:
+        messages.add_message(request, messages.ERROR, 'Debe iniciar sesión primero')
+        return HttpResponseRedirect('/')
+
+    try:
+        Evento.objects.get(pk=event_id).delete()
+        messages.add_message(request, messages.INFO, 'Evento borrado')
+    except:
+        messages.add_message(request, messages.ERROR, 'No se pudo borrar el evento')
+        print(traceback.format_exc())
+
+    return HttpResponseRedirect('/eventos/')
+
+
+def editar_eventos_view(request, event_id):
+    active_user = None
+    if request.user.is_authenticated:
+        active_user = request.user
+    else:
+        messages.add_message(request, messages.ERROR, 'Debe iniciar sesión primero')
+
+    evento_editable = Evento.objects.filter(usuario_evento=active_user, pk=event_id)
+    form_editar_evento = FormCrearEvento()
+    if request.method == 'POST':
+        form_crear_evento = FormCrearEvento(request.POST)
+
+        f_inicio = datetime.strptime(form_crear_evento.data.get('fecha_inicio_evento'), '%Y-%m-%dT%H:%M')
+        f_fin = datetime.strptime(form_crear_evento.data.get('fecha_fin_evento'), '%Y-%m-%dT%H:%M')
+
+        evento_editable.nombre_evento = form_crear_evento.data.get('nombre_evento')
+        evento_editable.categoria_evento = form_crear_evento.data.get('categoria_evento')
+        evento_editable.tipo_evento = form_crear_evento.data.get('tipo_evento')
+        evento_editable.lugar_evento = form_crear_evento.data.get('lugar_evento')
+        evento_editable.direccion_evento = form_crear_evento.data.get('direccion_evento')
+        evento_editable.fecha_inicio_evento = f_inicio
+        evento_editable.fecha_fin_evento = f_fin
+
+        try:
+            evento_editable.save()
+            messages.add_message(request, messages.INFO, 'Evento editado exitosamente')
+        except:
+            messages.add_message(request, messages.ERROR, form_crear_evento.errors)
+
+
+    context = {
+        'active_user': active_user,
+        'evento_editable': evento_editable,
+        'form_editar_evento': form_editar_evento,
+    }
+
+    return render(request, 'editarEvento.html', context)
