@@ -61,7 +61,7 @@
                                         </span>
                                 </a>
                                 <ul class="dropdown-menu">
-                                    <li><a href="{% url 'logout' %}"> Logout</a></li>
+                                    <li><a href="{% url 'logout' %}"> Cerrar Sesión</a></li>
                                 </ul>
                             </li>
                         </ul>
@@ -84,15 +84,27 @@
             <!--- Divider -->
             <div id="sidebar-menu">
                 <ul>
-                    <li class="has_sub active nav-active">
-                        <a href="javascript:void(0);" class="waves-effect"><i
-                                class="mdi mdi-account-key"></i><span> Ingreso </span><span class="pull-right"><i
-                                class="mdi mdi-chevron-right"></i></span></a>
-                        <ul class="list-unstyled">
-                            <li><a href="{% url 'login' %}">Iniciar Sesión</a></li>
-                            <li><a href="{% url 'registro' %}">Registrarse</a></li>
-                        </ul>
-                    </li>
+                    {% if not user.is_authenticated %}
+                        <li class="has_sub active nav-active">
+                            <a href="javascript:void(0);" class="waves-effect"><i
+                                    class="mdi mdi-account-key"></i><span> Ingreso </span><span class="pull-right"><i
+                                    class="mdi mdi-chevron-right"></i></span></a>
+                            <ul class="list-unstyled">
+                                <li><a href="{% url 'login' %}">Iniciar Sesión</a></li>
+                                <li><a href="{% url 'registro' %}">Registrarse</a></li>
+                            </ul>
+                        </li>
+                    {% else %}
+                        <li class="has-sub active nav-active">
+                            <a href="javascript:void(0);" class="waves-effect"><i
+                                    class="mdi mdi-calendar-clock"></i><span> Eventos </span><span class="pull-right"><i
+                                    class="mdi mdi-chevron-right"></i></span></a>
+                            <ul class="list-unstyled">
+                                <li><a href="{% url 'index' %}">Crear evento</a></li>
+                                <li><a href="{% url 'index' %}">Listar eventos</a></li>
+                            </ul>
+                        </li>
+                    {% endif %}
                 </ul>
             </div>
             <div class="clearfix"></div>
