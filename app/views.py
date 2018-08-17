@@ -147,8 +147,18 @@ def editar_eventos_view(request, event_id):
     else:
         messages.add_message(request, messages.ERROR, 'Debe iniciar sesión primero')
 
-    evento_editable = Evento.objects.filter(usuario_evento=active_user, pk=event_id)
-    form_editar_evento = FormCrearEvento()
+    evento_editable = Evento.objects.get(pk=event_id)
+    form_editar_evento = FormCrearEvento(
+        initial={'nombre_evento': evento_editable.nombre_evento,
+                 'categoria_evento': evento_editable.categoria_evento,
+                 'tipo_evento': evento_editable.categoria_evento,
+                 'tipo_evento': evento_editable.tipo_evento,
+                 'lugar_evento': evento_editable.lugar_evento,
+                 'direccion_evento': evento_editable.direccion_evento,
+                 'fecha_inicio_evento': evento_editable.fecha_inicio_evento,
+                 'fecha_fin_evento': evento_editable.fecha_fin_evento
+                 }
+    )
     if request.method == 'POST':
         form_crear_evento = FormCrearEvento(request.POST)
 
@@ -168,7 +178,6 @@ def editar_eventos_view(request, event_id):
             messages.add_message(request, messages.INFO, 'Evento editado exitosamente')
         except:
             messages.add_message(request, messages.ERROR, form_crear_evento.errors)
-
 
     context = {
         'active_user': active_user,
